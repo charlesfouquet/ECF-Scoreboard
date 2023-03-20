@@ -45,7 +45,9 @@ public class Contests extends HttpServlet {
 				request.setAttribute("matchToUpdate", contestDAO.findByID(Integer.parseInt(request.getParameter("id"))));
 			} else if (request.getParameter("act").equals("playersList")) {
 				request.setAttribute("contestID", request.getParameter("id"));
+				request.setAttribute("contestPlayersInfo", contestDAO.findByID(Integer.parseInt(request.getParameter("id"))));
 				request.setAttribute("playersList", playerDAO.findByContest(Integer.parseInt(request.getParameter("id"))));
+				request.setAttribute("listeAutresJoueurs", playerDAO.findOutOfContest(Integer.parseInt(request.getParameter("id"))));
 			} else if (request.getParameter("act").equals("deleteFromContest")) {
 				if (playerDAO.deleteFromContest(new beans.Player(Integer.parseInt(request.getParameter("id"))), new beans.Contest(Integer.parseInt(request.getParameter("contest"))))) {
 					request.setAttribute("message", "Suppression effectuée !");
@@ -53,7 +55,9 @@ public class Contests extends HttpServlet {
 					request.setAttribute("message", "Erreur lors de la suppression !");
 				}
 				request.setAttribute("contestID", request.getParameter("contest"));
+				request.setAttribute("contestPlayersInfo", contestDAO.findByID(Integer.parseInt(request.getParameter("contest"))));
 				request.setAttribute("playersList", playerDAO.findByContest(Integer.parseInt(request.getParameter("contest"))));
+				request.setAttribute("listeAutresJoueurs", playerDAO.findOutOfContest(Integer.parseInt(request.getParameter("contest"))));
 			}
 		}
 		request.setAttribute("listeJeux", gameDAO.read());
@@ -73,6 +77,28 @@ public class Contests extends HttpServlet {
 			} else {
 				if (contestDAO.update(new beans.Contest(Integer.parseInt(request.getParameter("idUpdate")), gameDAO.findByID(Integer.parseInt(request.getParameter("gameIDUpdate"))), java.sql.Date.valueOf(request.getParameter("start_dateUpdate"))))) {
 					request.setAttribute("message", "La mise à jour pour ce match a bien été prise en compte !");
+				}
+			}
+			doGet(request, response);
+		} else if (request.getParameter("playerAdded") != null) {
+			if (Integer.parseInt(request.getParameter("playerAdded")) > 0) {
+				if (playerDAO.addPlayerToContest(new beans.Player(Integer.parseInt(request.getParameter("playerAdded"))), new beans.Contest(Integer.parseInt(request.getParameter("idContest"))))) {
+					request.setAttribute("message", "La mise à jour des joueurs pour ce match a bien été prise en compte !");
+					request.setAttribute("contestID", request.getParameter("idContest"));
+					request.setAttribute("contestPlayersInfo", contestDAO.findByID(Integer.parseInt(request.getParameter("idContest"))));
+					request.setAttribute("playersList", playerDAO.findByContest(Integer.parseInt(request.getParameter("idContest"))));
+					request.setAttribute("listeAutresJoueurs", playerDAO.findOutOfContest(Integer.parseInt(request.getParameter("idContest"))));
+				}
+			}
+			doGet(request, response);
+		} else if (request.getParameter("isWinner") != null) {
+			if (Integer.parseInt(request.getParameter("isWinner")) > 0) {
+				if (contestDAO.addWinner(new beans.Contest(Integer.parseInt(request.getParameter("idContestWin"))), new beans.Player(Integer.parseInt(request.getParameter("isWinner"))))) {
+					request.setAttribute("message", "La mise à jour du vainqueur pour ce match a bien été prise en compte !");
+					request.setAttribute("contestID", request.getParameter("idContestWin"));
+					request.setAttribute("contestPlayersInfo", contestDAO.findByID(Integer.parseInt(request.getParameter("idContestWin"))));
+					request.setAttribute("playersList", playerDAO.findByContest(Integer.parseInt(request.getParameter("idContestWin"))));
+					request.setAttribute("listeAutresJoueurs", playerDAO.findOutOfContest(Integer.parseInt(request.getParameter("idContestWin"))));
 				}
 			}
 			doGet(request, response);

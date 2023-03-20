@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import beans.Contest;
+import beans.Player;
 import connector.DBConnect;
 
 public class ContestDAO implements IDAO<Contest> {	
@@ -77,6 +78,19 @@ public class ContestDAO implements IDAO<Contest> {
 			req.setInt(1, contest.getGame().getId());
 			req.setDate(2, contest.getStart_date());
 			req.setInt(3, contest.getId());
+			req.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean addWinner(Contest contest, Player player) {
+		try {
+			req = connect.prepareStatement("UPDATE contest SET winner_id = ? WHERE id = ?");
+			req.setInt(1, player.getId());
+			req.setInt(2, contest.getId());
 			req.execute();
 			return true;
 		} catch (SQLException e) {

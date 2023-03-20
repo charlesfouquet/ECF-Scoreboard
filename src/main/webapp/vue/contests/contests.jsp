@@ -166,14 +166,18 @@
 								<col span="1" style="width: 5%;">
 								<col span="1" style="width: 45%;">
 								<col span="1" style="width: 45%;">
-								<col span="1" style="width: 5%;">
+								<c:if test="${empty contestPlayersInfo.winner}">
+									<col span="1" style="width: 5%;">
+								</c:if>
 							</colgroup>
 							<thead>
 								<tr>
 									<th scope="col">ID</th>
 									<th scope="col">Email du joueur</th>
 									<th scope="col">Pseudo du joueur</th>
-									<th scope="col">Sup</th>
+									<c:if test="${empty contestPlayersInfo.winner}">
+										<th scope="col">Sup</th>
+									</c:if>
 								</tr>
 							</thead>
 							<tbody>
@@ -183,21 +187,74 @@
 										<td><c:out value="${joueur.id}"/></td>
 										<td><c:out value="${joueur.email}"/></td>
 										<td><c:out value="${joueur.nickname}"/></td>
-										<td><a href="?id=${joueur.id}&act=deleteFromContest&contest=${contestID}" class="deleteBtn"><i class="fa-solid fa-user-xmark"></i></a></td>
+										<c:if test="${empty contestPlayersInfo.winner}">
+											<td><a href="?id=${joueur.id}&act=deleteFromContest&contest=${contestID}" class="deleteBtn"><i class="fa-solid fa-user-xmark"></i></a></td>
+										</c:if>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 					</c:if>
 					<c:if test="${playersList.size() == 0}">
-						<h2>Pas de joueurs dans ce match</h2>
+						<h2>Pas encore de joueurs dans ce match</h2>
+					</c:if>
+					<c:if test="${playersList.size() < contestPlayersInfo.game.min_players}">
+						<h4 style="color:red;">Le nombre minimum requis de joueurs n'est pas atteint !</h4>
+					</c:if>
+					<c:if test="${playersList.size() == contestPlayersInfo.game.max_players}">
+						<c:if test="${empty contestPlayersInfo.winner}">
+							<h4 style="color:green;">Ce match est à capacité !</h4>
+						</c:if>
+					</c:if>
+					<c:if test="${playersList.size() < contestPlayersInfo.game.max_players}">
+						<c:if test="${empty contestPlayersInfo.winner}">
+							<form id="addPlayer" method="post" action="contests">
+								<div class="form-group">
+									<input type="text" class="form-control" id="idContest" name="idContest" style="display:none;">
+									<label for="playerAdded">Inscrire un joueur</label>
+									<select class="form-select" aria-label="Default select example"
+										name="playerAdded" id="playerAdded">
+										<c:if test="${listeAutresJoueurs.size() == 0}">
+											<option selected value=0>Pas de joueurs</option>
+										</c:if>
+										<c:if test="${listeAutresJoueurs.size() > 0}">
+											<option selected value=0>Choisir un joueur</option>
+											<c:forEach items="${listeAutresJoueurs}" var="joueur" varStatus="status">
+												<option value="${joueur.id}"><c:out value="${joueur.nickname}" /></option>
+											</c:forEach>
+										</c:if>
+									</select>
+									<button type="submit" class="btn btn-primary">Ajouter</button>
+								</div>
+							</form>
+						</c:if>
+					</c:if>
+					<c:if test="${playersList.size() >= contestPlayersInfo.game.min_players}">
+						<c:if test="${empty contestPlayersInfo.winner}">
+							<h4 style="color:green;">La partie peut avoir lieu avec ces <c:out value="${playersList.size()}" /> joueurs !</h4>
+							<form id="winnerPlayer" method="post" action="contests">
+								<div class="form-group">
+									<input type="text" class="form-control" id="idContestWin" name="idContestWin" style="display:none;">
+									<label for="isWinner">Qui a remporté la partie ?</label>
+									<select class="form-select" aria-label="Default select example"
+										name="isWinner" id="isWinner">
+										<option selected value=0>Le gagnant est...</option>
+										<c:forEach items="${playersList}" var="joueur" varStatus="status">
+											<option value="${joueur.id}"><c:out value="${joueur.nickname}" /></option>
+										</c:forEach>
+									</select>
+									<button type="submit" class="btn btn-primary">Enregistrer le vainqueur</button>
+								</div>
+							</form>
+						</c:if>
+						<c:if test="${not empty contestPlayersInfo.winner}">
+							<h4 style="color:orange;"><c:out value="${contestPlayersInfo.winner.nickname}" /> a remporté la partie !</h4>
+						</c:if>
 					</c:if>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn-primary" form="updateItem">Mettre
-						à jour</button>
+						data-bs-dismiss="modal">Fermer</button>
 				</div>
 			</div>
 		</div>
@@ -215,9 +272,21 @@
 	</script>
 </c:if>
 
+<c:if test="${not empty contestPlayersInfo}">
+	<script type="text/javascript">
+		$(window).on('load', function() {
+			$('#idContest').val("${contestID}");
+			$('#idContestWin').val("${contestID}");
+			$('#playersModal').modal('show');
+		});
+	</script>
+</c:if>
+
 <c:if test="${not empty playersList}">
 	<script type="text/javascript">
 		$(window).on('load', function() {
+			$('#idContest').val("${contestID}");
+			$('#idContestWin').val("${contestID}");
 			$('#playersModal').modal('show');
 		});
 	</script>

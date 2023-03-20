@@ -76,6 +76,35 @@ public class PlayerDAO implements IDAO<Player> {
 		}
 		return listePlayers;
 	}
+	
+	public ArrayList<Player> findOutOfContest(int ID) {
+		ArrayList<Player> listePlayers = new ArrayList<>();
+		
+		try {
+			req = connect.prepareStatement("SELECT DISTINCT p.* FROM player p LEFT JOIN player_contest pc ON pc.player_id = p.id WHERE p.id NOT IN (SELECT player_id FROM player_contest WHERE contest_id = ?) ORDER BY p.id ASC");
+			req.setInt(1, ID);
+			rs = req.executeQuery();
+			while (rs.next()) {
+				listePlayers.add(new Player(rs.getInt("id"), rs.getString("email"), rs.getString("nickname")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listePlayers;
+	}
+	
+	public boolean addPlayerToContest(Player player, Contest contest) {
+		try {
+			req = connect.prepareStatement("INSERT INTO player_contest (player_id, contest_id) VALUES (?, ?)");
+			req.setInt(1, player.getId());
+			req.setInt(2, contest.getId());
+			req.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public boolean update(Player player) {
