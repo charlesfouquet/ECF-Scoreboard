@@ -45,6 +45,13 @@ footer {
 	margin: auto;
 }
 
+#addPlayer, #winnerPlayer {
+	margin: 15px auto !important;
+	text-align: center;
+	width: min(80vw, 40%);
+	margin: auto;
+}
+
 table {
 	text-align: center !important;
 	width: min(80vw, 600px) !important;
