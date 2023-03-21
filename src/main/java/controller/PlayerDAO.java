@@ -146,5 +146,20 @@ public class PlayerDAO implements IDAO<Player> {
 		}
 		return false;
 	}
+	
+	public boolean mailExists(String email, int playerID) {
+		try {
+			req = connect.prepareStatement("SELECT * FROM player WHERE email = ? AND id NOT IN (?)");
+			req.setString(1, email);
+			req.setInt(2, playerID);
+			rs = req.executeQuery();
+			if (rs.next()) {
+				return true;				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }

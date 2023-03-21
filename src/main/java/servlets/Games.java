@@ -50,16 +50,23 @@ public class Games extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("idUpdate") != null) {
-			if (gameDAO.update(new beans.Game(Integer.parseInt(request.getParameter("idUpdate")), request.getParameter("titleUpdate"), Integer.parseInt(request.getParameter("min_playersUpdate")), Integer.parseInt(request.getParameter("max_playersUpdate"))))) {
-				request.setAttribute("message", "La mise à jour pour " + request.getParameter("titleUpdate") + " a bien été prise en compte !");
-				doGet(request, response);
+			if ((!request.getParameter("titleUpdate").isEmpty()) && (Integer.parseInt(request.getParameter("min_playersUpdate")) > 0) && (Integer.parseInt(request.getParameter("max_playersUpdate")) > 0)) {
+				if (gameDAO.update(new beans.Game(Integer.parseInt(request.getParameter("idUpdate")), request.getParameter("titleUpdate"), Integer.parseInt(request.getParameter("min_playersUpdate")), Integer.parseInt(request.getParameter("max_playersUpdate"))))) {
+					request.setAttribute("message", "La mise à jour pour " + request.getParameter("titleUpdate") + " a bien été prise en compte !");
+				}
+			} else {
+				request.setAttribute("message", "Erreur : un ou plusieurs champs sont vides ou mal remplis. Réessayez.");
 			}
+			doGet(request, response);			
 		} else {
-			if (gameDAO.create(new beans.Game(request.getParameter("title"), Integer.parseInt(request.getParameter("min_players")), Integer.parseInt(request.getParameter("max_players"))))) {
-				request.setAttribute("message", "Le jeu " + request.getParameter("title") + " a bien été ajouté !");
-				doGet(request, response);
-			}			
+			if ((!request.getParameter("title").isEmpty()) && (Integer.parseInt(request.getParameter("min_players")) > 0) && (Integer.parseInt(request.getParameter("max_players")) > 0)) {
+				if (gameDAO.create(new beans.Game(request.getParameter("title"), Integer.parseInt(request.getParameter("min_players")), Integer.parseInt(request.getParameter("max_players"))))) {
+					request.setAttribute("message", "Le jeu " + request.getParameter("title") + " a bien été ajouté !");
+				}	
+			} else {
+				request.setAttribute("message", "Erreur : un ou plusieurs champs sont vides ou mal remplis. Réessayez.");
+			}
+			doGet(request, response);
 		}
 	}
-
 }

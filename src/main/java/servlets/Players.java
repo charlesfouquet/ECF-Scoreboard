@@ -17,7 +17,8 @@ import controller.PlayerDAO;
 public class Players extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	PlayerDAO playerDAO = new PlayerDAO();
-       
+	private String regexEmail = "^[A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][@][A-Za-z0-9][A-Za-z0-9.-]+[A-Za-z0-9][.][A-Za-z0-9]{2,3}$";
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -50,16 +51,39 @@ public class Players extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("idUpdate") != null) {
-			if (playerDAO.update(new beans.Player(Integer.parseInt(request.getParameter("idUpdate")), request.getParameter("emailUpdate"), request.getParameter("nicknameUpdate")))) {
-				request.setAttribute("message", "La mise à jour pour " + request.getParameter("nicknameUpdate") + " a bien été prise en compte !");
-				doGet(request, response);
+			if ((!request.getParameter("emailUpdate").isEmpty()) && (!request.getParameter("nicknameUpdate").isEmpty())) {
+				if (request.getParameter("emailUpdate").matches(regexEmail)) {
+					if (!playerDAO.mailExists(request.getParameter("emailUpdate"), Integer.parseInt(request.getParameter("idUpdate")))) {
+						if (playerDAO.update(new beans.Player(Integer.parseInt(request.getParameter("idUpdate")), request.getParameter("emailUpdate"), request.getParameter("nicknameUpdate")))) {
+							request.setAttribute("message", "La mise à jour pour " + request.getParameter("nicknameUpdate") + " a bien été prise en compte !");
+						}
+					} else {
+						request.setAttribute("message", "Erreur : un compte avec cette adresse email existe déjà. Réessayez.");
+					}
+				} else {
+					request.setAttribute("message", "Erreur : le mail n'est pas au bon format. Réessayez.");
+				}
+			} else {
+				request.setAttribute("message", "Erreur : un ou plusieurs champs sont vides ou mal remplis. Réessayez.");
 			}
+			doGet(request, response);
 		} else {
-			if (playerDAO.create(new beans.Player(request.getParameter("email"), request.getParameter("nickname")))) {
-				request.setAttribute("message", "Le joueur " + request.getParameter("nickname") + " a bien été ajouté !");
-				doGet(request, response);
-			}			
+			if ((!request.getParameter("email").isEmpty()) && (!request.getParameter("nickname").isEmpty())) {
+				if (request.getParameter("email").matches(regexEmail)) {
+					if (!playerDAO.mailExists(request.getParameter("email"), 0)) {
+						if (playerDAO.create(new beans.Player(request.getParameter("email"), request.getParameter("nickname")))) {
+							request.setAttribute("message", "Le joueur " + request.getParameter("nickname") + " a bien été ajouté !");
+						}	
+					} else {
+						request.setAttribute("message", "Erreur : un compte avec cette adresse email existe déjà. Réessayez.");
+					}
+				} else {
+					request.setAttribute("message", "Erreur : le mail n'est pas au bon format. Réessayez.");
+				}				
+			} else {
+				request.setAttribute("message", "Erreur : un ou plusieurs champs sont vides ou mal remplis. Réessayez.");
+			}
+			doGet(request, response);
 		}
 	}
-
 }
