@@ -50,7 +50,7 @@ Objectifs :
 - Préparer la base de données avec le jeu de données fourni
 - Effectuer la connexion entre l'application et la base de données en local
 - Utiliser le modèle MVC pour le développement
-- Designer l'interface utilisateur de l'application en utilisant HTML5+CSS3 (pour un meilleur résultat en un temps limité, sollicitation de Bootstrap
+- Designer l'interface utilisateur de l'application en utilisant HTML5+CSS3+JS (pour un meilleur résultat en un temps limité, sollicitation de Bootstrap)
 - Créer les classes modèles pour les différents objets à instancier
 - Développer le contrôleur et les servlets pour traiter les données et interagir avec l'utilisateur
 - Ecrire au moins le Create et le Read pour chaque objet (réalisé : 1 CRUD pour les Game, 1 CRUD pour les Player, et 1 CRUD pour les Contest)
