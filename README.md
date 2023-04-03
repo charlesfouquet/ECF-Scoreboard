@@ -28,7 +28,7 @@
             </td>
             <td width="80px" align="center">
             <span><strong>JavaEE</strong></span><br>
-            <img height="32px" src="https://avatars.githubusercontent.com/u/23086798?s=200&v=4">
+            <img height="32px" src="https://images.app.goo.gl/94kNUm1RyVT8FprA7">
             </td>
         </tr>
     </tbody>
