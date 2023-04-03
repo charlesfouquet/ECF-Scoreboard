@@ -35,6 +35,7 @@
 </table>
 
 Projet individuel rendu dans le cadre de l'évaluation sur Java Enterprise Edition
+
 Temps alloué : 9 heures
 
 Cette application permet à un organisateur de tournois de jeux de société de consulter la liste des jeux proposés et des joueurs inscrits à la plateforme ainsi que d'organiser des tournois en associant des joueurs à un jeu pour une date donnée.
