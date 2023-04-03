@@ -28,7 +28,7 @@
             </td>
             <td width="80px" align="center">
             <span><strong>JavaEE</strong></span><br>
-            <img height="32px" src="https://images.app.goo.gl/94kNUm1RyVT8FprA7">
+            <img height="32px" src="https://ocs-consulting.nl/wp-content/uploads/2018/03/java-ee-logo.png">
             </td>
         </tr>
     </tbody>
