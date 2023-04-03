@@ -27,8 +27,8 @@
             <img height="32px" src="https://cdn-icons-png.flaticon.com/512/337/337953.png">
             </td>
             <td width="80px" align="center">
-            <span><strong>Java EE</strong></span><br>
-            <img height="32px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jquery/jquery-original.svg">
+            <span><strong>JavaEE</strong></span><br>
+            <img height="32px" src="https://avatars.githubusercontent.com/u/23086798?s=200&v=4">
             </td>
         </tr>
     </tbody>
